@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeerChain — Water Safety DApp</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(160deg, #e8f4fd 0%, #e0f7ee 100%);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(90deg, #0077b6, #00b4d8, #48cae4);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0,119,182,0.3);
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header h1 { color: white; font-size: 22px; font-weight: 600; }
+    .header p { color: rgba(255,255,255,0.85); font-size: 12px; margin-top: 2px; }
+    .live-badge {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .live-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #7fff7f;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+    /* WALLET BAR */
+    .wallet-bar {
+      background: white;
+      border-bottom: 1px solid rgba(0,180,216,0.2);
+      padding: 10px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .wallet-bar span { color: #555; }
+    .wallet-bar strong { color: #0077b6; }
+    .connect-btn {
+      background: linear-gradient(90deg, #0077b6, #00b4d8);
+      color: white;
+      border: none;
+      padding: 7px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .connect-btn:hover { opacity: 0.85; }
+
+    /* MAIN */
+    .main { padding: 24px 40px; max-width: 1200px; margin: 0 auto; }
+
+    /* METRICS */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .metric {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid rgba(0,180,216,0.2);
+      box-shadow: 0 2px 8px rgba(0,119,182,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .metric::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 3px;
+    }
+    .metric.blue::after { background: linear-gradient(90deg,#0077b6,#00b4d8); }
+    .metric.red::after { background: linear-gradient(90deg,#e74c3c,#c0392b); }
+    .metric.amber::after { background: linear-gradient(90deg,#f39c12,#d68910); }
+    .metric.green::after { background: linear-gradient(90deg,#27ae60,#1e8449); }
+    .metric .val { font-size: 28px; font-weight: 600; }
+    .metric .lbl { font-size: 11px; color: #888; margin-top: 4px; }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid rgba(0,180,216,0.2);
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: #888;
+      border-radius: 8px 8px 0 0;
+      border: none;
+      background: transparent;
+      transition: all 0.2s;
+    }
+    .tab.active {
+      color: #0077b6;
+      border-bottom: 3px solid #0077b6;
+      background: rgba(0,119,182,0.05);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* CARDS */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(0,180,216,0.15);
+      box-shadow: 0 2px 12px rgba(0,119,182,0.06);
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0077b6;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+
+    /* IDS FORM */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid rgba(0,180,216,0.3);
+      border-radius: 8px;
+      font-size: 13px;
+      color: #333;
+      background: white;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: #0077b6;
+      box-shadow: 0 0 0 3px rgba(0,119,182,0.1);
+    }
+
+    /* IDS RESULT */
+    .ids-result {
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      display: none;
+    }
+    .ids-result.critical { background:#fff0f0; border-left:4px solid #e74c3c; color:#c0392b; }
+    .ids-result.alert { background:#fffbf0; border-left:4px solid #f39c12; color:#d68910; }
+    .ids-result.safe { background:#f0fff4; border-left:4px solid #27ae60; color:#1e8449; }
+    .ids-result.active { display: block; }
+
+    /* BUTTONS */
+    .btn {
+      background: linear-gradient(90deg, #0077b6, #00b4d8);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      width: 100%;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ALERT FEED */
+    .alert-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      animation: slidein 0.3s ease;
+    }
+    @keyframes slidein { from{opacity:0;transform:translateX(-8px);} to{opacity:1;transform:translateX(0);} }
+    .alert-row.critical { background:#fff0f0; border-left:3px solid #e74c3c; color:#c0392b; }
+    .alert-row.alert-warn { background:#fffbf0; border-left:3px solid #f39c12; color:#d68910; }
+    .alert-row.safe { background:#f0fff4; border-left:3px solid #27ae60; color:#1e8449; }
+
+    /* BLOCKCHAIN */
+    .block-card {
+      background: white;
+      border: 1px solid rgba(0,180,216,0.2);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .block-title { font-weight: 600; color: #0077b6; font-size: 13px; }
+    .status-badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .status-badge.CRITICAL { background:#fff0f0; color:#e74c3c; }
+    .status-badge.ALERT { background:#fffbf0; color:#f39c12; }
+    .status-badge.SAFE { background:#f0fff4; color:#27ae60; }
+    .block-detail { color: #666; line-height: 1.8; }
+    .block-detail span { color: #333; font-weight: 500; }
+
+    /* TX */
+    .tx-card {
+      background: linear-gradient(135deg, #f8fcff, #f0fff8);
+      border: 1px solid rgba(0,180,216,0.2);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .tx-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .tx-id { font-weight: 600; color: #0077b6; }
+    .tx-detail { color: #666; line-height: 1.8; }
+    .tx-detail span { color: #333; font-weight: 500; }
+    .tx-arrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,119,182,0.05);
+      padding: 6px 10px;
+      border-radius: 8px;
+      margin: 8px 0;
+      font-size: 12px;
+    }
+
+    /* CNS */
+    .cns-step {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 4px solid #0077b6;
+    }
+    .cns-step h4 { color: #0077b6; font-size: 13px; margin-bottom: 8px; }
+    .cns-code {
+      background: #f0f9ff;
+      border: 1px solid rgba(0,180,216,0.2);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #333;
+      word-break: break-all;
+    }
+
+    /* CITY STATUS */
+    .city-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .city-badge {
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+    }
+    .city-badge.CRITICAL { background:#fff0f0; color:#c0392b; border:1px solid #fadbd8; }
+    .city-badge.ALERT { background:#fffbf0; color:#d68910; border:1px solid #fdebd0; }
+    .city-badge.SAFE { background:#f0fff4; color:#1e8449; border:1px solid #d5f5e3; }
+
+    /* SCANNING */
+    .scanning {
+      display: none;
+      text-align: center;
+      padding: 16px;
+      color: #0077b6;
+      font-size: 13px;
+    }
+    .scanning.active { display: block; }
+    .scan-bar {
+      height: 4px;
+      background: #e8f4fd;
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .scan-progress {
+      height: 100%;
+      background: linear-gradient(90deg, #0077b6, #00b4d8, #48cae4);
+      border-radius: 2px;
+      animation: scanning 1.5s ease infinite;
+    }
+    @keyframes scanning {
+      0%{width:0;margin-left:0;}
+      50%{width:60%;margin-left:20%;}
+      100%{width:0;margin-left:100%;}
+    }
+
+    /* EMPTY STATE */
+    .empty { text-align: center; padding: 30px; color: #aaa; font-size: 13px; }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    /* WAVE DIVIDER */
+    .wave-div {
+      background: linear-gradient(90deg,#0077b6,#00b4d8,#48cae4);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      color: white;
+    }
+    .wave-div h2 { font-size: 16px; font-weight: 500; color: white; }
+    .wave-div p { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div style="font-size:28px;">🌊</div>
+    <div>
+      <h1>NeerChain — Water Safety DApp</h1>
+      <p>Blockchain + IDS + Smart Contract | Ganache + Truffle + MetaMask</p>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="live-badge"><div class="live-dot"></div> Live on Ganache</div>
+  </div>
+</div>
+
+<!-- WALLET BAR -->
+<div class="wallet-bar">
+  <span>🦊 MetaMask:</span>
+  <strong id="walletAddress">Not Connected</strong>
+  <button class="connect-btn" onclick="connectWallet()">Connect Wallet</button>
+  <span style="margin-left:auto;">💰 Contract Balance: <strong id="contractBalance">0 ETH</strong></span>
+  <span>📦 Contract: <strong id="contractAddr">Loading...</strong></span>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="metric blue">
+      <div class="val" id="totalReadings" style="color:#0077b6;">0</div>
+      <div class="lbl">💧 Total Readings</div>
+    </div>
+    <div class="metric red">
+      <div class="val" id="criticalCount" style="color:#e74c3c;">0</div>
+      <div class="lbl">🔴 Critical</div>
+    </div>
+    <div class="metric amber">
+      <div class="val" id="alertCount" style="color:#f39c12;">0</div>
+      <div class="lbl">🟡 Alerts</div>
+    </div>
+    <div class="metric green">
+      <div class="val" id="safeCount" style="color:#27ae60;">0</div>
+      <div class="lbl">🟢 Safe</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('ids')">🔍 IDS Monitor</button>
+    <button class="tab" onclick="switchTab('readings')">📊 Readings</button>
+    <button class="tab" onclick="switchTab('blockchain')">🔗 Blockchain</button>
+    <button class="tab" onclick="switchTab('transactions')">📋 Transactions</button>
+    <button class="tab" onclick="switchTab('cns')">🔒 CNS Proof</button>
+    <button class="tab" onclick="switchTab('cities')">🗺️ City Status</button>
+  </div>
+
+  <!-- IDS MONITOR TAB -->
+  <div id="tab-ids" class="tab-panel active">
+    <div class="card">
+      <div class="card-title">🔍 IDS — Intrusion Detection System</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>City</label>
+          <select id="city">
+            <option>Vijayawada</option>
+            <option>Guntur</option>
+            <option>Rajahmundry</option>
+            <option>Visakhapatnam</option>
+            <option>Tirupati</option>
+            <option>Nellore</option>
+            <option>Kurnool</option>
+            <option>Kadapa</option>
+            <option>Eluru</option>
+            <option>Ongole</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>pH Level (safe: 6.5–8.5)</label>
+          <input type="number" id="pH" placeholder="e.g. 7.2" step="0.1" min="0" max="14" />
+        </div>
+        <div class="form-group">
+          <label>Turbidity NTU (safe: &lt;4.0)</label>
+          <input type="number" id="turbidity" placeholder="e.g. 2.5" step="0.1" min="0" />
+        </div>
+        <div class="form-group">
+          <label>TDS mg/L (safe: &lt;500)</label>
+          <input type="number" id="TDS" placeholder="e.g. 350" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Dissolved O₂ mg/L (safe: &gt;6.0)</label>
+          <input type="number" id="DO" placeholder="e.g. 7.5" step="0.1" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Quick Fill</label>
+          <select onchange="quickFill(this.value)">
+            <option value="">— Select preset —</option>
+            <option value="critical">🔴 Critical (factory dump)</option>
+            <option value="alert">🟡 Alert (borderline)</option>
+            <option value="safe">🟢 Safe (normal)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- IDS RESULT -->
+      <div class="ids-result" id="idsResult"></div>
+
+      <div class="scanning" id="scanning">
+        🌊 IDS analyzing water quality...
+        <div class="scan-bar"><div class="scan-progress"></div></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="runIDS()">🔍 Run IDS Analysis</button>
+        <button class="btn" id="submitBtn" onclick="submitToBlockchain()" disabled
+          style="background:linear-gradient(90deg,#27ae60,#1e8449);">
+          ⛓️ Submit to Blockchain
+        </button>
+      </div>
+    </div>
+
+    <!-- LIVE ALERT FEED -->
+    <div class="card">
+      <div class="card-title">🔴 Live Alert Feed</div>
+      <div id="alertFeed">
+        <div class="empty">No readings yet. Run IDS Analysis to start! 👆</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- READINGS TAB -->
+  <div id="tab-readings" class="tab-panel">
+    <div class="card">
+      <div class="card-title">📊 All Water Readings from Blockchain</div>
+      <div id="readingsList">
+        <div class="empty">No readings on blockchain yet.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCKCHAIN TAB -->
+  <div id="tab-blockchain" class="tab-panel">
+    <div class="wave-div">
+      <h2>🔗 Blockchain Evidence Chain</h2>
+      <p>Every reading is permanently locked on Ethereum via Ganache</p>
+    </div>
+    <div id="blockchainList">
+      <div class="empty">No blocks yet. Submit a reading to see blocks!</div>
+    </div>
+  </div>
+
+  <!-- TRANSACTIONS TAB -->
+  <div id="tab-transactions" class="tab-panel">
+    <div class="wave-div">
+      <h2>📋 Smart Contract Transactions</h2>
+      <p>Auto-executed by WaterSafety.sol — no human intervention</p>
+    </div>
+    <div id="transactionsList">
+      <div class="empty">No transactions yet.</div>
+    </div>
+  </div>
+
+  <!-- CNS PROOF TAB -->
+  <div id="tab-cns" class="tab-panel">
+    <div class="wave-div">
+      <h2>🔒 CNS Encryption Proof</h2>
+      <p>How NeerChain secures water alert data</p>
+    </div>
+    <div class="cns-step">
+      <h4>1. 📄 Original Alert Data (Plaintext)</h4>
+      <div class="cns-code" id="cnsPlain">Submit a reading to see live CNS proof</div>
+    </div>
+    <div class="cns-step" style="border-left-color:#27ae60;">
+      <h4>2. 🔒 Keccak256 Hash (Solidity)</h4>
+      <div class="cns-code" id="cnsHash">—</div>
+    </div>
+    <div class="cns-step" style="border-left-color:#f39c12;">
+      <h4>3. 🔐 Ethereum Transaction Signature</h4>
+      <div class="cns-code" id="cnsSig">—</div>
+    </div>
+    <div class="cns-step" style="border-left-color:#e74c3c;">
+      <h4>4. ⛓️ Immutable Block on Ganache</h4>
+      <div class="cns-code" id="cnsBlock">—</div>
+    </div>
+    <div style="background:#f0fff4;border:1px solid #d5f5e3;border-radius:10px;padding:14px;color:#1e8449;font-size:13px;">
+      ✅ All evidence is cryptographically secured and tamper-proof on Ethereum blockchain
+    </div>
+  </div>
+
+  <!-- CITY STATUS TAB -->
+  <div id="tab-cities" class="tab-panel">
+    <div class="card">
+      <div class="card-title">🗺️ City Safety Status</div>
+      <div class="city-grid" id="cityGrid">
+        <div class="empty" style="grid-column:span 4;">Run IDS scan to see city status</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  🌊 NeerChain — Blockchain-IDS Water Safety Monitor | 
+  Smart Contract: WaterSafety.sol | 
+  Powered by Ethereum + Ganache + MetaMask
+</div>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.9.0/dist/web3.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
