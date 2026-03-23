@@ -173,9 +173,3 @@ This project is licensed under the MIT License.
 * Aamina (323103210001)
 * Pradeepa (323103210008)
 
-## 🏫 Institution
-
-**Gayatri Vidya Parishad College of Engineering for Women**
-Department of Computer Science and Engineering
-Under the guidance of **Dr. P. Muralidhara Rao**
-Academic Year 2025–2026
