@@ -165,9 +165,9 @@ This project is licensed under the MIT License.
 
 ## 👩‍💻 Authors
 
-* Mahima (323103210040) — DApp Development, IDS Engine, Smart Contract
-* Teammate 2 — Python Blockchain + Merkle Tree
-* Teammate 3 — Testing & Documentation
+* Mahima (323103210040) 
+* Aamina (323103210001)
+* Pradeepa (323103210008)
 
 ## 🏫 Institution
 
