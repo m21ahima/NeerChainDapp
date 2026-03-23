@@ -47,7 +47,6 @@ NeerChain-Dapp/
 │   └── merkle_tree.html
 ├── build/
 │   └── contracts/
-├── blockchain_blocks.py
 ├── test/
 └── truffle-config.js
 ```
@@ -102,11 +101,6 @@ Right click `frontend/index.html` → Open with Live Server
 
 Make sure MetaMask is connected to Localhost 7545
 
-**7️⃣ Run Python Blockchain Demo (optional)**
-```bash
-pip install web3
-python blockchain_blocks.py
-```
 
 ## 🔐 How It Works
 
