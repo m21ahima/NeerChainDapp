@@ -172,6 +172,9 @@ This project is licensed under the MIT License.
 ## 🏫 Institution
 
 **Gayatri Vidya Parishad College of Engineering for Women**
+
 Department of Computer Science and Engineering
+
 Under the guidance of **Dr. P. Muralidhara Rao**
+
 Academic Year 2025–2026
