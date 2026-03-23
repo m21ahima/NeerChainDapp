@@ -147,7 +147,9 @@ Open `frontend/merkle_tree.html` with Live Server after submitting readings to v
 
 ## 📸 Screenshots
 
-> Add screenshots of your DApp here after running it!
+![DApp](screenshots/)
+![Ganache Blocks](screenshots/)
+![Merkle Tree](screenshots/)
 
 ## 🌍 Future Enhancements
 
