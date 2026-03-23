@@ -146,7 +146,6 @@ When IDS detects a violation, `WaterSafety.sol` automatically:
 Open `frontend/merkle_tree.html` with Live Server after submitting readings to visualize the Merkle Tree built from your blockchain transactions.
 
 ## 📸 Screenshots
-
 ![Sign Up](screenshots/signup_page.jpeg)
 ![Login](screenshots/login_page.jpeg)
 ![Dapp IDS](screenshots/dapp_ids.jpeg)
