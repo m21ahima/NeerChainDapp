@@ -161,9 +161,5 @@ Open `frontend/merkle_tree.html` with Live Server after submitting readings to v
 
 This project is licensed under the MIT License.
 
-## 👩‍💻 Authors
 
-* Mahima (323103210040) 
-* Aamina (323103210001)
-* Pradeepa (323103210008)
 
